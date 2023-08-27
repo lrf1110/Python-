@@ -1,0 +1,126 @@
+这里提供一个简单的贪吃蛇游戏Python源代码:
+
+ python
+ import turtle
+ import time
+ import random
+ 
+ # 设置屏幕
+ wn = turtle.Screen()
+ wn.title("贪吃蛇")
+ wn.bgcolor("green")
+ wn.setup(width=600, height=600)
+ 
+ # 贪吃蛇头部
+ head = turtle.Turtle()
+ head.speed(0)
+ head.shape("square")
+ head.color("black")
+ head.penup()
+ head.goto(0,0)
+ head.direction = "stop"
+ 
+ # 贪吃蛇吃的食物
+ food = turtle.Turtle()
+ food.speed(0)
+ food.shape("circle")
+ food.color("red")
+ food.penup()
+ food.goto(0,100)
+ 
+ segments = []
+ 
+ # 设置游戏分数
+ score = 0
+ 
+ # 上下左右按键
+ def go_up():
+     head.direction = "up"
+ def go_down():
+     head.direction = "down"    
+ def go_left():
+     head.direction = "left"
+ def go_right():
+     head.direction = "right"
+     
+ # 按键响应
+ wn.listen()
+ wn.onkey(go_up, "Up")
+ wn.onkey(go_down, "Down")
+ wn.onkey(go_left, "Left")  
+ wn.onkey(go_right, "Right")
+ 
+ # 移动
+ def move():
+   
+   # 头部移动  
+   if head.direction == "up":
+       y = head.ycor()
+       head.sety(y + 20)
+ 
+   if head.direction == "down":
+       y = head.ycor()
+       head.sety(y - 20)
+ 
+   if head.direction == "left":
+       x = head.xcor()
+       head.setx(x - 20)
+ 
+   if head.direction == "right":
+       x = head.xcor()
+       head.setx(x + 20)
+       
+ # 主循环  
+ while True:
+     wn.update()
+     
+     # 撞墙判断
+     if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
+         time.sleep(1)
+         head.goto(0,0)
+         head.direction = "stop"
+         
+         # 隐藏尾巴
+         for segment in segments:
+             segment.goto(1000, 1000)
+         
+         # 清空分数
+         score = 0
+         
+     # 吃食物  
+     if head.distance(food) < 20:
+         x = random.randint(-290, 290)
+         y = random.randint(-290, 290)
+         food.goto(x,y)
+         
+         # 增加分数
+         score += 10
+ 
+         # 增加身体
+         new_segment = turtle.Turtle()
+         new_segment.speed(0)
+         new_segment.shape("square")
+         new_segment.color("grey")
+         new_segment.penup()
+         segments.append(new_segment)
+         
+     # 尾巴跟随头部移动
+     for index in range(len(segments)-1, 0, -1):
+         x = segments[index-1].xcor()
+         y = segments[index-1].ycor()
+         segments[index].goto(x, y)
+     
+     # 头部作为第一个尾巴
+     if len(segments) > 0:
+         x = head.xcor()
+         y = head.ycor()
+         segments[0].goto(x,y)
+     
+     move()
+     
+     time.sleep(0.1)
+     
+ wn.mainloop()
+
+
+这是一个基础的贪吃蛇游戏实现,可以继续扩展更多功能和优化。希望对你有参考帮助!
